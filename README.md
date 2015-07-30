@@ -1,2 +1,2 @@
 # nmea-server
-for study
+for study nmea protocal
