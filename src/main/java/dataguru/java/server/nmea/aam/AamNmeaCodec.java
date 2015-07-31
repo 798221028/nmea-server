@@ -1,9 +1,10 @@
 package dataguru.java.server.nmea.aam;
 
-import java.util.List;
-
 import dataguru.java.server.nmea.AbstractNmeaCodec;
 import dataguru.java.server.nmea.AbstractNmeaObject;
+
+import java.util.List;
+import java.util.Observable;
 
 public class AamNmeaCodec extends AbstractNmeaCodec {
 
@@ -19,4 +20,8 @@ public class AamNmeaCodec extends AbstractNmeaCodec {
 		return null;
 	}
 
+	@Override
+	public void update(Observable o, Object arg) {
+
+	}
 }

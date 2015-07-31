@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public abstract class AbstractNmeaCodec extends Observable {
+public abstract class AbstractNmeaCodec extends Observable implements Observer{
 	
 	private AbstractNmeaObject nmeaObj;
 	
