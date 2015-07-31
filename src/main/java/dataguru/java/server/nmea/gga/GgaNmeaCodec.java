@@ -30,7 +30,7 @@ import dataguru.java.server.nmea.util.ErrorType;
  * 
  */
 
-public class ggaNmeaCodec extends AbstractNmeaCodec {
+public class GgaNmeaCodec extends AbstractNmeaCodec {
 	
 	private String ggaID;
 	private String timeUTC;
