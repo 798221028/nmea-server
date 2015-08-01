@@ -4,6 +4,8 @@ import java.util.List;
 
 import dataguru.java.server.nmea.AbstractNmeaCodec;
 import dataguru.java.server.nmea.AbstractNmeaObject;
+import dataguru.java.server.nmea.exception.BusinessException;
+import dataguru.java.server.nmea.util.ErrorType;
 
 /*
  * 	例：$GPGLL,4250.5589,S,14718.5084,E,092204.999,A*2D
@@ -20,10 +22,36 @@ import dataguru.java.server.nmea.AbstractNmeaObject;
 
 public class GllNmeaCodec extends AbstractNmeaCodec {
 
+	private GllNmeaObject gllNmeaObject;
+	
 	@Override
 	public void decode(String content) {
-		// TODO Auto-generated method stub
-
+		
+		if (content == null) {
+			throw new BusinessException(ErrorType.errorNULLParamter);
+		}
+		
+		int i = 0;
+		int pos = 0;
+		String[] ss = content.split(",");
+		byte data[] = ss[i++].getBytes();
+		if (data[pos] != '$' || data[pos+3] != 'G' 
+				|| data[pos+4] != 'L' || data[pos+4] != 'L') {
+			throw new BusinessException(ErrorType.errorProtocolHead);
+		}
+		
+		if (gllNmeaObject == null) {
+			gllNmeaObject = new GllNmeaObject();
+		}
+		
+		gllNmeaObject.setGllID(ss[i++]);
+		gllNmeaObject.setLatitudeData(ss[i++]);
+		gllNmeaObject.setLatitude(ss[i++]);
+		gllNmeaObject.setLongitudeData(ss[i++]);
+		gllNmeaObject.setLongitude(ss[i++]);
+		gllNmeaObject.setTimeUTC(ss[i++]);
+		gllNmeaObject.setPositionStatus(ss[i++]);
+		gllNmeaObject.setCheckValue(ss[i++]);
 	}
 
 	@Override

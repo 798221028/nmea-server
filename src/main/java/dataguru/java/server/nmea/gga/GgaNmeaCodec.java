@@ -1,6 +1,5 @@
 package dataguru.java.server.nmea.gga;
 
-import java.io.IOException;
 import java.util.List;
 
 import dataguru.java.server.nmea.AbstractNmeaCodec;
@@ -32,22 +31,7 @@ import dataguru.java.server.nmea.util.ErrorType;
 
 public class GgaNmeaCodec extends AbstractNmeaCodec {
 	
-	private String ggaID;
-	private String timeUTC;
-	private String latitudeData;
-	private String latitude;
-	private String longitudeData;
-	private String longitude;
-	private String gpsStatus;
-	private String satelliteNum;
-	private String hdop;
-	private String altitude;
-	private String altitudeUnit;
-	private String wgs;
-	private String wgsUnit;
-	private String diffTime;
-	private String diffID;
-	private String checkValue;
+	private GgaNmeaObject ggaNmeaObject;
 	
 	@Override
 	public void decode(String content) {
@@ -61,28 +45,34 @@ public class GgaNmeaCodec extends AbstractNmeaCodec {
 		int i = 0;
 		String ss[] = content.split(",");
 		byte data[] = ss[i++].getBytes();
-		if (data[pos++] != '$' || data[pos++] != 'G' || data[pos++] != 'P'
-				|| data[pos++] != 'G' || data[pos++] != 'G' || data[pos++] != 'G') {
+		
+		// 应该判断 GGA 协议头数据是否是: "$**GGA"
+		if (data[pos] != '$' || data[pos+3] != 'G' 
+				|| data[pos+4] != 'G' || data[pos+5] != 'A') {
 					
 			throw new BusinessException(ErrorType.errorProtocolHead);
 		}
 		
-		this.ggaID = ss[i++];
-		this.timeUTC = ss[i++];
-		this.latitudeData = ss[i++];
-		this.latitude = ss[i++];
-		this.longitudeData = ss[i++];
-		this.longitude = ss[i++];
-		this.gpsStatus = ss[i++];
-		this.satelliteNum = ss[i++];
-		this.hdop = ss[i++];
-		this.altitude = ss[i++];
-		this.altitudeUnit = ss[i++];
-		this.wgs = ss[i++];
-		this.wgsUnit = ss[i++];
-		this.diffTime = ss[i++];
-		this.diffID = ss[i++];
-		this.checkValue = ss[i++];
+		if (ggaNmeaObject == null) {
+			ggaNmeaObject = new GgaNmeaObject();
+		}
+		
+		ggaNmeaObject.setGgaID(ss[i++]);
+		ggaNmeaObject.setTimeUTC(ss[i++]);
+		ggaNmeaObject.setLatitudeData(ss[i++]);
+		ggaNmeaObject.setLatitude(ss[i++]);
+		ggaNmeaObject.setLongitudeData(ss[i++]);
+		ggaNmeaObject.setLongitude(ss[i++]);
+		ggaNmeaObject.setGpsStatus(ss[i++]);
+		ggaNmeaObject.setSatelliteNum(ss[i++]);
+		ggaNmeaObject.setHdop(ss[i++]);
+		ggaNmeaObject.setAltitude(ss[i++]);
+		ggaNmeaObject.setAltitudeUnit(ss[i++]);
+		ggaNmeaObject.setWgs(ss[i++]);
+		ggaNmeaObject.setWgsUnit(ss[i++]);
+		ggaNmeaObject.setDiffTime(ss[i++]);
+		ggaNmeaObject.setDiffID(ss[i++]);
+		ggaNmeaObject.setCheckValue(ss[i++]);
 	}
 	
 	@Override
@@ -97,124 +87,12 @@ public class GgaNmeaCodec extends AbstractNmeaCodec {
 		return null;
 	}
 
-	public String getTimeUTC() {
-		return timeUTC;
+	public GgaNmeaObject getGgaNmeaObject() {
+		return ggaNmeaObject;
 	}
 
-	public void setTimeUTC(String timeUTC) {
-		this.timeUTC = timeUTC;
+	public void setGgaNmeaObject(GgaNmeaObject ggaNmeaObject) {
+		this.ggaNmeaObject = ggaNmeaObject;
 	}
 
-	public String getLatitudeData() {
-		return latitudeData;
-	}
-
-	public void setLatitudeData(String latitudeData) {
-		this.latitudeData = latitudeData;
-	}
-
-	public String getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(String latitude) {
-		this.latitude = latitude;
-	}
-
-	public String getLongitudeData() {
-		return longitudeData;
-	}
-
-	public void setLongitudeData(String longitudeData) {
-		this.longitudeData = longitudeData;
-	}
-
-	public String getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(String longitude) {
-		this.longitude = longitude;
-	}
-
-	public String getGpsStatus() {
-		return gpsStatus;
-	}
-
-	public void setGpsStatus(String gpsStatus) {
-		this.gpsStatus = gpsStatus;
-	}
-
-	public String getSatelliteNum() {
-		return satelliteNum;
-	}
-
-	public void setSatelliteNum(String satelliteNum) {
-		this.satelliteNum = satelliteNum;
-	}
-
-	public String getHdop() {
-		return hdop;
-	}
-
-	public void setHdop(String hdop) {
-		this.hdop = hdop;
-	}
-
-	public String getAltitude() {
-		return altitude;
-	}
-
-	public void setAltitude(String altitude) {
-		this.altitude = altitude;
-	}
-
-	public String getAltitudeUnit() {
-		return altitudeUnit;
-	}
-
-	public void setAltitudeUnit(String altitudeUnit) {
-		this.altitudeUnit = altitudeUnit;
-	}
-
-	public String getWgs() {
-		return wgs;
-	}
-
-	public void setWgs(String wgs) {
-		this.wgs = wgs;
-	}
-
-	public String getWgsUnit() {
-		return wgsUnit;
-	}
-
-	public void setWgsUnit(String wgsUnit) {
-		this.wgsUnit = wgsUnit;
-	}
-
-	public String getDiffTime() {
-		return diffTime;
-	}
-
-	public void setDiffTime(String diffTime) {
-		this.diffTime = diffTime;
-	}
-
-	public String getDiffID() {
-		return diffID;
-	}
-
-	public void setDiffID(String diffID) {
-		this.diffID = diffID;
-	}
-
-	public String getCheckValue() {
-		return checkValue;
-	}
-
-	public void setCheckValue(String checkValue) {
-		this.checkValue = checkValue;
-	}
-	
 }

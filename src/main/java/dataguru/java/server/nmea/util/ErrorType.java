@@ -18,7 +18,7 @@ public enum ErrorType {
 	errorNULLParamter,
 	
 	/*
-	 * 
+	 * 系统错误
 	 */
 	errorSystem
 }
