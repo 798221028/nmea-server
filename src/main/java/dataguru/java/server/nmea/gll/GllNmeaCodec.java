@@ -32,11 +32,14 @@ public class GllNmeaCodec extends AbstractNmeaCodec {
 		}
 		
 		int i = 0;
-		int pos = 0;
 		String[] ss = content.split(",");
+		if (ss == null || ss.length == 0) {
+			throw new BusinessException(ErrorType.errorProtocolData);
+		}
+		
 		byte data[] = ss[i++].getBytes();
-		if (data[pos] != '$' || data[pos+3] != 'G' 
-				|| data[pos+4] != 'L' || data[pos+4] != 'L') {
+		if (data.length < 6 || data[0] != '$' || data[3] != 'G' 
+				|| data[4] != 'L' || data[4] != 'L') {
 			throw new BusinessException(ErrorType.errorProtocolHead);
 		}
 		
@@ -44,14 +47,44 @@ public class GllNmeaCodec extends AbstractNmeaCodec {
 			gllNmeaObject = new GllNmeaObject();
 		}
 		
-		gllNmeaObject.setGllID(ss[i++]);
-		gllNmeaObject.setLatitudeData(ss[i++]);
-		gllNmeaObject.setLatitude(ss[i++]);
-		gllNmeaObject.setLongitudeData(ss[i++]);
-		gllNmeaObject.setLongitude(ss[i++]);
-		gllNmeaObject.setTimeUTC(ss[i++]);
-		gllNmeaObject.setPositionStatus(ss[i++]);
-		gllNmeaObject.setCheckValue(ss[i++]);
+		if (i < ss.length) {
+			gllNmeaObject.setGllID(ss[i++]);
+		}
+		
+		if (i < ss.length) {
+			gllNmeaObject.setLatitudeData(ss[i++]);
+		}
+		
+		if (i < ss.length) {
+			gllNmeaObject.setLatitude(ss[i++]);
+		}
+		
+		if (i < ss.length) {
+			gllNmeaObject.setLongitudeData(ss[i++]);
+		}
+		
+		if (i < ss.length) {
+			gllNmeaObject.setLongitude(ss[i++]);
+		}
+		
+		if (i < ss.length) {
+			gllNmeaObject.setTimeUTC(ss[i++]);
+		}
+		
+		if (i < ss.length) {
+			gllNmeaObject.setPositionStatus(ss[i++]);
+		}
+		
+		int padding = 0;
+		if (i <= ss.length) {
+			
+			byte[] value = ss[i].getBytes();
+			padding = value[0];
+			gllNmeaObject.setCheckValue(new String(value, 2, 2));
+		}
+		
+		int len = content.length() - 6 - 2 - 6;
+		checkValue(new String(content.getBytes(), 6, len), gllNmeaObject.getCheckValue());
 	}
 
 	@Override

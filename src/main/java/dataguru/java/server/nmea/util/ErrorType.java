@@ -13,6 +13,11 @@ public enum ErrorType {
 	errorProtocolHead,
 	
 	/*
+	 * 协议数据错误
+	 */
+	errorProtocolData,
+	
+	/*
 	 * 参数为空
 	 */
 	errorNULLParamter,

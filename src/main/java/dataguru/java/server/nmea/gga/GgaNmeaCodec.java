@@ -44,11 +44,16 @@ public class GgaNmeaCodec extends AbstractNmeaCodec {
 		int pos = 0;
 		int i = 0;
 		String ss[] = content.split(",");
+
+		if (ss == null || ss.length == 0) {
+			throw new BusinessException(ErrorType.errorProtocolData);
+		}
+		
 		byte data[] = ss[i++].getBytes();
 		
 		// 应该判断 GGA 协议头数据是否是: "$**GGA"
-		if (data[pos] != '$' || data[pos+3] != 'G' 
-				|| data[pos+4] != 'G' || data[pos+5] != 'A') {
+		if (data.length < 6 || data[0] != '$' || data[3] != 'G' 
+				|| data[4] != 'G' || data[5] != 'A') {
 					
 			throw new BusinessException(ErrorType.errorProtocolHead);
 		}
@@ -57,22 +62,76 @@ public class GgaNmeaCodec extends AbstractNmeaCodec {
 			ggaNmeaObject = new GgaNmeaObject();
 		}
 		
-		ggaNmeaObject.setGgaID(ss[i++]);
-		ggaNmeaObject.setTimeUTC(ss[i++]);
-		ggaNmeaObject.setLatitudeData(ss[i++]);
-		ggaNmeaObject.setLatitude(ss[i++]);
-		ggaNmeaObject.setLongitudeData(ss[i++]);
-		ggaNmeaObject.setLongitude(ss[i++]);
-		ggaNmeaObject.setGpsStatus(ss[i++]);
-		ggaNmeaObject.setSatelliteNum(ss[i++]);
-		ggaNmeaObject.setHdop(ss[i++]);
-		ggaNmeaObject.setAltitude(ss[i++]);
-		ggaNmeaObject.setAltitudeUnit(ss[i++]);
-		ggaNmeaObject.setWgs(ss[i++]);
-		ggaNmeaObject.setWgsUnit(ss[i++]);
-		ggaNmeaObject.setDiffTime(ss[i++]);
-		ggaNmeaObject.setDiffID(ss[i++]);
-		ggaNmeaObject.setCheckValue(ss[i++]);
+		if (i <= ss.length) {
+			ggaNmeaObject.setGgaID(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setTimeUTC(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setLatitudeData(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setLatitude(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setLongitudeData(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setLongitude(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setGpsStatus(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setSatelliteNum(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setHdop(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setAltitude(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setAltitudeUnit(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setWgs(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setWgsUnit(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setDiffTime(ss[i++]);
+		}
+		
+		if (i <= ss.length) {
+			ggaNmeaObject.setDiffID(ss[i++]);
+		}
+		
+		int padding = 0;
+		if (i <= ss.length) {
+			
+			byte[] value = ss[i].getBytes();
+			padding = value[0];
+			ggaNmeaObject.setCheckValue(new String(value, 2, 2));
+		}
+		
+		int len = content.length() - 6 - 2 - 6;
+		checkValue(new String(content.getBytes(), 6, len), ggaNmeaObject.getCheckValue());
 	}
 	
 	@Override

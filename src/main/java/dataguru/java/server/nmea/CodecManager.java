@@ -2,7 +2,6 @@ package dataguru.java.server.nmea;
 
 import java.util.List;
 
-import dataguru.java.server.nmea.aam.AamNmeaCodec;
 import dataguru.java.server.nmea.util.ThreadPool;
 
 public class CodecManager {
@@ -22,7 +21,7 @@ public class CodecManager {
 
 			public void run() {
 				
-				new AamNmeaCodec().decode(content);
+//				new AamNmeaCodec().decode(content);
 
 			}
 			

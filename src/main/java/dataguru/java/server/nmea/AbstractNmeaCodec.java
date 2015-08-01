@@ -15,4 +15,8 @@ public abstract class AbstractNmeaCodec extends Observable{
 	
 	abstract public AbstractNmeaObject getNmeaObj();
 	
+	public boolean checkValue(String s, String checkValue) {
+		
+		return false;
+	}
 }
